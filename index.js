@@ -5,7 +5,7 @@ const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 
-const DIST_DIR = path.resolve(__dirname, 'output');
+const DIST_DIR = path.resolve(__dirname, 'dist');
 const distPATH = path.join(DIST_DIR, 'genteam.html');
 
 const src = require('./src/page-template');
@@ -152,7 +152,7 @@ function teamMenu() {
             const engineer = new Engineer(response.engName, response.engId, response.engEmail, response.engGithub);
             teamMemberArr.push(engineer);
             idArr.push(response.engId);
-            generateTeam();
+            renderTeam();
         });
     }
 
@@ -163,7 +163,7 @@ function teamMenu() {
             name: "intName",
             message: "What is the name of the intern?. (Required)",
             validate: response => {
-              if (response !== "") {
+              if (response !== '') {
                 return true;
               }
               return "Please enter a valid name!";
@@ -211,18 +211,19 @@ function teamMenu() {
             const intern = new Intern(response.intName, response.intId, response.intEmail, response.intSchool);
             teamMemberArr.push(intern);
             idArr.push(response.intId);
-            generateTeam();
-        });
-    }
-
-    function generateTeam() {
-        // create the dist directory if the dist path doesn't exist
-        if (!fs.existsSync(DIST_DIR)) {
-          fs.mkdirSync(DIST_DIR)
+            renderTeam();
+          });
         }
-        fs.writeFileSync(distPATH, src(teamMemberArr), "utf-8");
+        
+        function generateTeam() {
+          // create the dist directory if the dist path doesn't exist
+          if (!fs.existsSync(DIST_DIR)) {
+            fs.mkdirSync(DIST_DIR)
+          }
+          fs.writeFileSync(distPATH, src(teamMemberArr), "utf-8");
+          console.log('Team created! Check genTeam.html to see the results!');
       }
-    
+      
       renderManager();
 }
 
